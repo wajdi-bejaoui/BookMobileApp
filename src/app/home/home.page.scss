@@ -1,0 +1,61 @@
+ion-item {
+  --border-width: 0; /* Supprimer la bordure des items */
+  font-size: 1.1rem; /* Augmenter la taille du texte */
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--ion-color-primary);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+p {
+  text-align: center;
+  color: var(--ion-color-medium);
+}
+
+ion-button {
+  margin-top: 20px;
+}
+
+/* Styles pour la barre de recherche */
+ion-searchbar {
+  margin: 10px 0; /* Espacement autour de la barre de recherche */
+}
+
+/* Style pour le formulaire d'ajout de catégorie */
+.add-category-form {
+  margin-top: 20px; /* Espacement au-dessus du formulaire */
+  padding: 10px; /* Espacement intérieur */
+  background: rgba(240, 240, 240, 0.8); /* Fond léger et transparent */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Ombre légère pour un effet de profondeur */
+}
+
+.category-action-buttons {
+  display: flex; /* Utiliser Flexbox pour le positionnement */
+  justify-content: space-between; /* Espacer les boutons */
+  margin-top: 20px; /* Espacement au-dessus des boutons */
+}
+
+ion-list {
+  margin-top: 10px; /* Ajoute un espacement au-dessus de la liste */
+}
+
+/* Styles pour les boutons */
+ion-button.success {
+  --background: var(--ion-color-success);
+  --color: white;
+}
+
+ion-button.danger {
+  --background: var(--ion-color-danger);
+  --color: white;
+}
+
+ion-button.primary {
+  --background: var(--ion-color-primary);
+  --color: white;
+}

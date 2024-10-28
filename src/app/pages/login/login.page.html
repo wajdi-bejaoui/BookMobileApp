@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Connexion</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-background">
+    <h2 class="login-title">Welcome to Books TEK-UP</h2>
+    <form (ngSubmit)="login()">
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="loginData.email" name="email" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Mot de passe</ion-label>
+        <ion-input type="password" [(ngModel)]="loginData.password" name="password" required></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-button expand="full" type="submit" class="login-button">Connexion</ion-button>
+      </ion-item>
+
+      <p class="divider">ou</p>
+      
+      <ion-item lines="none">
+        <ion-button expand="full" (click)="goToRegister()" class="register-button">S'inscrire</ion-button>
+      </ion-item>
+    </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-title class="footer-title">Book.TEK-UP</ion-title>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,55 @@
+.login-background {
+  background-image: url('/assets/background.jpg') !important; /* Utiliser l'image de fond */
+  background-size: cover !important;
+  background-position: center !important;
+  height: 100% !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9); /* Fond blanc légèrement transparent */
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.login-icon {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto 20px auto; /* Centrer l'icône */
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--ion-color-primary);
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+}
+
+.divider {
+  text-align: center;
+  margin: 15px 0;
+  color: gray;
+  font-family: 'Arial', sans-serif;
+}
+
+.login-button, .register-button {
+  background-color: var(--ion-color-primary);
+  color: white;
+  font-weight: bold;
+}
+
+.footer-title {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}

@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Livres disponibles</ion-title>
+    <ion-buttons slot="end">
+      <ion-badge>{{ filteredBooks.length }}</ion-badge>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-toolbar>
+    <ion-searchbar 
+      [(ngModel)]="searchTerm" 
+      (ionInput)="filterBooks()" 
+      placeholder="Rechercher un livre" 
+      slot="start">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Affichage des livres filtrés -->
+  <ion-list>
+    <ion-item *ngFor="let book of filteredBooks">
+      <ion-label>
+        <h2>{{ book.title }}</h2>
+        <p><strong>Auteur :</strong> {{ book.author }}</p>
+        <p><strong>Description :</strong> {{ book.description }}</p>
+        <p><strong>Nombre de pages :</strong> {{ book.pages }}</p>
+      </ion-label>
+      <!-- Bouton pour télécharger le livre -->
+      <ion-button slot="end" (click)="downloadBook(book)">
+        Télécharger
+      </ion-button>
+      <!-- Bouton pour supprimer le livre -->
+      <ion-button slot="end" color="danger" (click)="deleteBook(book)">
+        Supprimer
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Bouton pour ajouter un nouveau livre -->
+  <ion-button expand="full" (click)="toggleAddBookForm()">
+    Ajouter un livre
+  </ion-button>
+
+  <!-- Formulaire pour ajouter un nouveau livre -->
+  <div class="add-book-form" *ngIf="showAddBookForm">
+    <ion-item>
+      <ion-label position="floating">Titre</ion-label>
+      <ion-input [(ngModel)]="newBook.title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Auteur</ion-label>
+      <ion-input [(ngModel)]="newBook.author"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-textarea [(ngModel)]="newBook.description"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Nombre de pages</ion-label>
+      <ion-input type="number" [(ngModel)]="newBook.pages"></ion-input>
+    </ion-item>
+
+    <!-- Bouton pour uploader le fichier du livre -->
+    <ion-item>
+      <ion-label>Uploader le livre</ion-label>
+      <input type="file" (change)="onFileSelected($event)" />
+    </ion-item>
+
+    <ion-button expand="block" (click)="addBook()">
+      Ajouter
+    </ion-button>
+  </div>
+</ion-content>

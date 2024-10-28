@@ -1,0 +1,43 @@
+.register-container {
+    max-width: 400px; // Largeur maximale du conteneur
+    margin: 50px auto; // Centrer verticalement
+    padding: 20px; // Espacement interne
+    background: #ffffff; // Couleur de fond
+    border-radius: 12px; // Arrondir les bords
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); // Ombre légère
+  }
+  
+  .register-title {
+    text-align: center; // Centrer le texte
+    margin-bottom: 20px; // Espacement en bas
+    color: var(--ion-color-primary); // Couleur du texte
+    font-weight: bold; // Gras
+    font-size: 1.5rem; // Taille de la police
+  }
+  
+  .register-button {
+    background-color: var(--ion-color-primary); // Couleur de fond
+    color: white; // Couleur du texte
+    border-radius: 20px; // Arrondir les bords
+    font-weight: bold; // Gras
+    transition: background-color 0.3s ease; // Transition pour l'effet hover
+  }
+  
+  .register-button:hover {
+    background-color: rgba(56, 128, 255, 0.9); // Utiliser une couleur CSS pour le survol
+  }
+  
+  .footer-links {
+    text-align: center; // Centrer le texte
+    margin-top: 20px; // Espacement en haut
+  }
+  
+  .login-link {
+    color: var(--ion-color-primary); // Couleur du lien
+    text-decoration: underline; // Souligner
+  }
+  
+  .login-link:hover {
+    color: rgba(56, 128, 255, 0.9); // Utiliser une couleur CSS pour le survol
+  }
+  
