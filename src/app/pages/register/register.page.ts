@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-register',
@@ -7,19 +9,45 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  registerData = { email: '', password: '' };  // Correction ici
+  registerData = { email: '', password: '' };
 
-  constructor(private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController
+  ) {}
 
-  ngOnInit() {
-    // Retirer la redirection ou ajouter une condition si nécessaire
-    // this.router.navigate(['/login']); 
+  async register() {
+    try {
+      const user = await this.authService.signUp(this.registerData.email, this.registerData.password);
+      console.log('User registered:', user);
+
+      // Show success message
+      const toast = await this.toastController.create({
+        message: 'Registration successful!',
+        duration: 2000,
+        color: 'success'
+      });
+      await toast.present();
+
+      // Redirect to login page after toast is shown
+      toast.onDidDismiss().then(() => {
+        this.router.navigate(['/login']);
+      });
+    } catch (error) {
+      console.error('Registration failed:', error);
+
+      // Show error message
+      const toast = await this.toastController.create({
+        message: 'Registration failed. Please try again.',
+        duration: 2000,
+        color: 'danger'
+      });
+      await toast.present();
+    }
   }
 
-  register() {
-    // Implémentez la logique d'inscription ici
-    console.log(this.registerData);
-    // Redirection après inscription réussie
-    // this.router.navigate(['/some-other-page']);
+  ngOnInit() {
+    // Optional redirection condition, if needed
   }
 }

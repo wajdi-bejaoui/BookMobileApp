@@ -1,92 +1,166 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BookService } from '../book.service';
+import { AuthService } from '../auth.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
-  // Liste des catégories
-  categories = [
-    { id: 1, name: 'Fiction', description: 'Explorez notre collection de romans de fiction captivants.' },
-    { id: 2, name: 'Science', description: 'Découvrez des livres sur la science et les innovations.' },
-    { id: 3, name: 'Histoire', description: 'Plongez dans le monde fascinant de l\'histoire.' },
-    // Ajoutez d'autres catégories ici
-  ];
-
-  // Propriété pour stocker la catégorie sélectionnée
-  selectedCategory: any = null;
-
-  // Propriétés pour gérer l'ajout de catégorie
-  isAddingCategory = false;
-  newCategoryName: string = '';
-  newCategoryDescription: string = '';
-
-  // Propriétés pour gérer la recherche
-  searchTerm: string = '';
+export class HomePage implements OnInit {
+  books: any[] = [];
+  categories: any[] = [];
   filteredCategories: any[] = [];
+  selectedCategory: any = null;
+  isAddingCategory = false;
+  newCategoryName = '';
+  newCategoryDescription = '';
+  searchTerm = '';
 
-  constructor(private router: Router) {
-    // Initialiser les catégories filtrées avec toutes les catégories
+  constructor(
+    private router: Router,
+    private bookService: BookService,
+    private authService: AuthService,
+    private alertController: AlertController
+  ) {}
+
+  ngOnInit() {
+    // Initialize with default categories
+    this.categories = [
+      { id: 1, name: 'Science Fiction', description: 'Books about futuristic technology and science' },
+      { id: 2, name: 'Fantasy', description: 'Books about magical worlds and creatures' },
+      { id: 3, name: 'Mystery', description: 'Books full of suspense and plot twists' },
+    ];
     this.filteredCategories = [...this.categories];
+    this.fetchBooks();
   }
 
-  // Méthode pour sélectionner une catégorie
+  fetchBooks() {
+    this.bookService.getAllBooks().subscribe(
+      (data) => {
+        this.books = data;
+      },
+      (error) => {
+        console.error('Error fetching books: ', error);
+      }
+    );
+  }
+
+  // Select a category
   selectCategory(category: any) {
     this.selectedCategory = category;
   }
 
-  // Méthode pour naviguer vers la page des livres disponibles pour une catégorie
-  goToBooks(categoryId: number) {
-    this.router.navigate(['/books', categoryId]);
+  // Navigate to books based on category
+  async goToBooks(categoryId: number) {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/books', categoryId]);
+    } else {
+      alert('Connexion requise');
+    }
   }
 
-  // Méthode pour afficher le formulaire d'ajout de catégorie
+  // Show the add category form
   showAddCategoryForm() {
     this.isAddingCategory = true;
   }
 
-  // Méthode pour annuler l'ajout d'une nouvelle catégorie
+  // Cancel adding a category
   cancelAddCategory() {
     this.isAddingCategory = false;
     this.newCategoryName = '';
     this.newCategoryDescription = '';
   }
 
-  // Méthode pour ajouter une nouvelle catégorie à la liste
+  // Add a new category to Firestore and locally
   addCategory() {
     if (this.newCategoryName.trim() && this.newCategoryDescription.trim()) {
       const newCategory = {
-        id: this.categories.length + 1, // Générer un nouvel ID
+        id: this.categories.length + 1, // Generate a unique ID
         name: this.newCategoryName,
         description: this.newCategoryDescription,
       };
 
-      this.categories.push(newCategory); // Ajouter la nouvelle catégorie à la liste
-      this.filterCategories(); // Mettre à jour la liste filtrée
-      this.cancelAddCategory(); // Réinitialiser le formulaire
-    }
-  }
-
-  // Méthode pour filtrer les catégories en fonction du terme de recherche
-  filterCategories() {
-    const searchTermTrimmed = this.searchTerm.trim().toLowerCase(); // Supprimer les espaces en trop
-    if (searchTermTrimmed) {
-      this.filteredCategories = this.categories.filter(category =>
-        category.name.toLowerCase().includes(searchTermTrimmed)
-      );
+      this.bookService.addCategory(newCategory).then(() => {
+        this.categories.push(newCategory);
+        this.filteredCategories = [...this.categories];
+        this.cancelAddCategory();
+        alert('Category added successfully!');
+      }).catch(error => {
+        console.error('Error adding category:', error);
+        alert('Failed to add category. Please try again.');
+      });
     } else {
-      this.filteredCategories = [...this.categories]; // Si la recherche est vide, afficher toutes les catégories
+      alert('Please fill in both category name and description.');
     }
   }
 
-  // Méthode pour supprimer la catégorie sélectionnée
-  deleteSelectedCategory() {
+  // Filter categories based on search term
+  filterCategories() {
+    const searchTermTrimmed = this.searchTerm.trim().toLowerCase();
+    this.filteredCategories = searchTermTrimmed
+      ? this.categories.filter(category =>
+          category.name.toLowerCase().includes(searchTermTrimmed)
+        )
+      : [...this.categories];
+  }
+
+  async deleteSelectedCategory() {
     if (this.selectedCategory) {
-      this.categories = this.categories.filter(category => category.id !== this.selectedCategory.id);
-      this.filterCategories(); // Mettre à jour la liste filtrée après suppression
-      this.selectedCategory = null; // Réinitialiser la catégorie sélectionnée après suppression
+      // Confirm deletion with the user
+      const alert = await this.alertController.create({
+        header: 'Delete Category',
+        message: `Are you sure you want to delete the category "${this.selectedCategory.name}"?`,
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              console.log('Deletion cancelled');
+            }
+          },
+          {
+            text: 'Delete',
+            handler: async () => {
+              try {
+                // Call service to delete category
+                await this.bookService.deleteCategory(this.selectedCategory.id);
+                
+                // Update local categories after deletion
+                this.categories = this.categories.filter(c => c.id !== this.selectedCategory.id);
+                this.filteredCategories = [...this.categories];
+                this.selectedCategory = null; // Reset selected category
+
+                // Show success message
+                const successAlert = await this.alertController.create({
+                  header: 'Success',
+                  message: 'Category deleted successfully!',
+                  buttons: ['OK']
+                });
+                await successAlert.present();
+              } catch (error) {
+                console.error('Error deleting category:', error);
+
+                // Show error message using AlertController
+                const errorAlert = await this.alertController.create({
+                  header: 'Error',
+                  message: 'Failed to delete category. Please try again.',
+                  buttons: ['OK']
+                });
+                await errorAlert.present();
+              }
+            }
+          }
+        ]
+      });
+      
+      await alert.present();
     }
+  }
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

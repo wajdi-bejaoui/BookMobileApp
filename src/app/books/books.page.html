@@ -27,9 +27,9 @@
         <p><strong>Nombre de pages :</strong> {{ book.pages }}</p>
       </ion-label>
       <!-- Bouton pour télécharger le livre -->
-      <ion-button slot="end" (click)="downloadBook(book)">
+      <!-- <ion-button slot="end" (click)="downloadBook(book)">
         Télécharger
-      </ion-button>
+      </ion-button> -->
       <!-- Bouton pour supprimer le livre -->
       <ion-button slot="end" color="danger" (click)="deleteBook(book)">
         Supprimer
@@ -71,4 +71,11 @@
       Ajouter
     </ion-button>
   </div>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>

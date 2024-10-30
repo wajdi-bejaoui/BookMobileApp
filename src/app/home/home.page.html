@@ -3,15 +3,22 @@
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>Catégories</ion-title>
+      <!-- Logout Button on the Right -->
+      <ion-buttons slot="end">
+        <ion-button (click)="logout()">
+          <ion-icon name="log-out" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
-    <!-- Barre de recherche pour filtrer les catégories -->
+  
+    <!-- Search Bar for Filtering Categories -->
     <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterCategories()" placeholder="Rechercher une catégorie"></ion-searchbar>
   </ion-header>
-
+  
   <ion-content class="ion-padding">
     <ion-list>
       <!-- Boucle sur les catégories filtrées -->
-      <ion-item *ngFor="let category of filteredCategories" (click)="selectCategory(category)">
+      <ion-item *ngFor="let category of categories" (click)="selectCategory(category)">
         {{ category.name }}
       </ion-item>
     </ion-list>
@@ -57,7 +64,16 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
+       <!-- Back Button with an Arrow -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/default-page"></ion-back-button>  <!-- Specify a fallback URL if needed -->
+    </ion-buttons>
       <ion-title>Page d'accueil</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="logout()">
+          <ion-icon name="log-out" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -75,7 +91,34 @@
 
     <!-- Message par défaut lorsque aucune catégorie n'est sélectionnée -->
     <div *ngIf="!selectedCategory">
-      <p>Sélectionnez une catégorie dans le menu pour afficher la description.</p>
+      <ion-grid>
+        <ion-row class="ion-justify-content-center">
+          <ion-col sizeLg="4" sizeMd="6" sizeXs="12" *ngFor="let book of books">
+            <ion-card class="custom-card">
+              <ion-card-header>
+                <ion-card-title class="title">title : {{ book.title }}</ion-card-title>
+                <ion-card-subtitle color="secondary">author : {{ book.author }}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <p class="summary">description : {{ book.description }}</p>
+              </ion-card-content>
+    
+              <!-- Update and Remove Buttons -->
+              <ion-footer>
+                <ion-toolbar>
+                  <ion-buttons slot="start">
+                    <ion-button color="primary">
+                      <ion-icon  name="create"></ion-icon> Downlaod
+                    </ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-footer>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      
+      
     </div>
   </ion-content>
 </div>
